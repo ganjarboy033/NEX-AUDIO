@@ -154,8 +154,9 @@ public class B {
     @JavascriptInterface public String metadata(String uri) {
         android.media.MediaMetadataRetriever r=new android.media.MediaMetadataRetriever();
         try { r.setDataSource(a, Uri.parse(uri)); org.json.JSONObject o=new org.json.JSONObject();
-            String[] keys={android.media.MediaMetadataRetriever.METADATA_KEY_TITLE,android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST,android.media.MediaMetadataRetriever.METADATA_KEY_ALBUM,android.media.MediaMetadataRetriever.METADATA_KEY_DURATION,android.media.MediaMetadataRetriever.METADATA_KEY_MIMETYPE};
-            String[] names={"title","artist","album","duration","mime"}; for(int i=0;i<keys.length;i++)o.put(names[i],r.extractMetadata(Integer.parseInt(keys[i]))==null?"":r.extractMetadata(Integer.parseInt(keys[i])));
+            int[] keys={android.media.MediaMetadataRetriever.METADATA_KEY_TITLE,android.media.MediaMetadataRetriever.METADATA_KEY_ARTIST,android.media.MediaMetadataRetriever.METADATA_KEY_ALBUM,android.media.MediaMetadataRetriever.METADATA_KEY_DURATION,android.media.MediaMetadataRetriever.METADATA_KEY_MIMETYPE};
+            String[] names={"title","artist","album","duration","mime"};
+            for(int i=0;i<keys.length;i++){ String value=r.extractMetadata(keys[i]); o.put(names[i],value==null?"":value); }
             byte[] art=r.getEmbeddedPicture(); if(art!=null && art.length<250000)o.put("art","data:image/jpeg;base64,"+android.util.Base64.encodeToString(art,android.util.Base64.NO_WRAP));
             return o.toString();
         } catch(Throwable t){return "{}";} finally {try{r.release();}catch(Throwable ignored){}}
